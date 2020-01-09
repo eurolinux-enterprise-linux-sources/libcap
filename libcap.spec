@@ -1,9 +1,12 @@
 Name: libcap
 Version: 2.16
-Release: 5.2%{?dist}
+Release: 5.5%{?dist}
 Summary: Library for getting and setting POSIX.1e capabilities
 Source: http://www.kernel.org/pub/linux/libs/security/linux-privs/kernel-2.6/%{name}-%{version}.tar.gz
+Source1: capsh.1
 Patch0: libcap-2.16-headerfix.patch
+Patch1: libcap-2.16-chroot.patch
+Patch2: libcap-2.16-capsh-manpage.patch
 
 URL: http://ftp.kernel.org/pub/linux/libs/security/linux-privs/kernel-2.6/
 License: LGPLv2+ or BSD
@@ -32,6 +35,9 @@ libcap.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
+cp -f %{SOURCE1} doc/
+%patch2 -p1
 
 %build
 # libcap can not be build with _smp_mflags:
@@ -46,7 +52,7 @@ make install DESTDIR=${RPM_BUILD_ROOT} \
              INCDIR=${RPM_BUILD_ROOT}/%{_includedir} \
              MANDIR=${RPM_BUILD_ROOT}/%{_mandir}/ \
              COPTFLAG="$RPM_OPT_FLAGS"
-mkdir -p ${RPM_BUILD_ROOT}/%{_mandir}/man{2,3,8}
+mkdir -p ${RPM_BUILD_ROOT}/%{_mandir}/man{1,2,3,8}
 #mv -f doc/*.2 ${RPM_BUILD_ROOT}/%{_mandir}/man2/
 mv -f doc/*.3 ${RPM_BUILD_ROOT}/%{_mandir}/man3/
 
@@ -62,6 +68,7 @@ chmod +x ${RPM_BUILD_ROOT}/%{_lib}/*.so.*
 %defattr(-,root,root,-)
 /%{_lib}/*.so.*
 %{_sbindir}/*
+%{_mandir}/man1/*
 %{_mandir}/man8/*
 /%{_lib}/security/pam_cap.so
 %doc doc/capability.notes License
@@ -77,6 +84,16 @@ chmod +x ${RPM_BUILD_ROOT}/%{_lib}/*.so.*
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Tue Aug 23 2011 Karsten Hopp <karsten@redhat.com> 2.16-5.5
+- remove some obsolete parameters from capsh manpage
+
+* Wed Aug 17 2011 Karsten Hopp <karsten@redhat.com> 2.16-5.4
+- add capsh manpage (#730957)
+
+* Thu Aug 11 2011 Karsten Hopp <karsten@redhat.com> 2.16-5.3
+- make sure to chdir ("/") after calling chroot
+  http://cwe.mitre.org/data/definitions/243.html
+
 * Fri Feb 26 2010 Karsten Hopp <karsten@redhat.com> 2.16-5.2
 - update licenses
 
