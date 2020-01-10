@@ -1,16 +1,14 @@
 Name: libcap
 Version: 2.22
-Release: 10%{?dist}
+Release: 6%{?dist}
 Summary: Library for getting and setting POSIX.1e capabilities
 # Original tarball should be here, but got deleted:
 #Source: http://www.kernel.org/pub/linux/libs/security/linux-privs/kernel-2.6/libcap-2.22.tar.bz2
 Source: http://mirror.linux.org.au/linux/libs/security/linux-privs/libcap2/%{name}-%{version}.tar.bz2
 # http://manned.org/getpcaps/299a4949/src:
 Source1: getpcaps.8
-Source2: libcap.pc
 Patch0: %{name}-2.22-buildflags.patch
 Patch1: libcap-2.22-signed-sizeof-compare.patch
-Patch2: %{name}-PAM_REINITIALIZE_CRED.patch
 
 URL: http://ftp.kernel.org/pub/linux/libs/security/linux-privs/kernel-2.6/
 License: LGPLv2+
@@ -39,7 +37,6 @@ libcap.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %build
 # libcap can not be build with _smp_mflags:
@@ -53,10 +50,9 @@ make install RAISE_SETFCAP=no \
              SBINDIR=%{buildroot}/%{_sbindir} \
              INCDIR=%{buildroot}/%{_includedir} \
              MANDIR=%{buildroot}/%{_mandir}/
-mkdir -p %{buildroot}/%{_mandir}/man{2,3,8} %{buildroot}/%{_libdir}/pkgconfig/
+mkdir -p %{buildroot}/%{_mandir}/man{2,3,8}
 mv -f doc/*.3 %{buildroot}/%{_mandir}/man3/
 cp -f %{SOURCE1} %{buildroot}/%{_mandir}/man8/
-cp -f %{SOURCE2} %{buildroot}/%{_libdir}/pkgconfig/libcap.pc
 
 # remove static lib
 rm -f %{buildroot}/%{_libdir}/libcap.a
@@ -80,24 +76,11 @@ chmod +x %{buildroot}/%{_libdir}/*.so.*
 %{_includedir}/*
 /%{_libdir}/*.so
 %{_mandir}/man3/*
-/%{_libdir}/pkgconfig/libcap.pc
 
 %clean
 rm -rf %{buildroot}
 
 %changelog
-* Thu Apr 11 2019 Karsten Hopp <karsten@redhat.com> - 2.22-10
-- check for PAM_REINITIALIZE_CRED in pam_cap.so, required by sudo
-
-* Mon Mar 06 2017 Karsten Hopp <karsten@redhat.com> - 2.22-9
-- add pkgconfig file 
-
-* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 2.22-8
-- Mass rebuild 2014-01-24
-
-* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 2.22-7
-- Mass rebuild 2013-12-27
-
 * Tue May 14 2013 Karsten Hopp <karsten@redhat.com> 2.22-6
 - mv libraries to /usr/lib*
 - add getpcaps man page 
