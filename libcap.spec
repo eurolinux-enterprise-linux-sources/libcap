@@ -1,12 +1,13 @@
 Name: libcap
 Version: 2.22
-Release: 8%{?dist}
+Release: 9%{?dist}
 Summary: Library for getting and setting POSIX.1e capabilities
 # Original tarball should be here, but got deleted:
 #Source: http://www.kernel.org/pub/linux/libs/security/linux-privs/kernel-2.6/libcap-2.22.tar.bz2
 Source: http://mirror.linux.org.au/linux/libs/security/linux-privs/libcap2/%{name}-%{version}.tar.bz2
 # http://manned.org/getpcaps/299a4949/src:
 Source1: getpcaps.8
+Source2: libcap.pc
 Patch0: %{name}-2.22-buildflags.patch
 Patch1: libcap-2.22-signed-sizeof-compare.patch
 
@@ -50,9 +51,10 @@ make install RAISE_SETFCAP=no \
              SBINDIR=%{buildroot}/%{_sbindir} \
              INCDIR=%{buildroot}/%{_includedir} \
              MANDIR=%{buildroot}/%{_mandir}/
-mkdir -p %{buildroot}/%{_mandir}/man{2,3,8}
+mkdir -p %{buildroot}/%{_mandir}/man{2,3,8} %{buildroot}/%{_libdir}/pkgconfig/
 mv -f doc/*.3 %{buildroot}/%{_mandir}/man3/
 cp -f %{SOURCE1} %{buildroot}/%{_mandir}/man8/
+cp -f %{SOURCE2} %{buildroot}/%{_libdir}/pkgconfig/libcap.pc
 
 # remove static lib
 rm -f %{buildroot}/%{_libdir}/libcap.a
@@ -76,11 +78,15 @@ chmod +x %{buildroot}/%{_libdir}/*.so.*
 %{_includedir}/*
 /%{_libdir}/*.so
 %{_mandir}/man3/*
+/%{_libdir}/pkgconfig/libcap.pc
 
 %clean
 rm -rf %{buildroot}
 
 %changelog
+* Mon Mar 06 2017 Karsten Hopp <karsten@redhat.com> - 2.22-9
+- add pkgconfig file 
+
 * Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 2.22-8
 - Mass rebuild 2014-01-24
 
