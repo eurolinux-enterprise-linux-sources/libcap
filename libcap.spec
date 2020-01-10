@@ -1,6 +1,6 @@
 Name: libcap
 Version: 2.22
-Release: 6%{?dist}
+Release: 8%{?dist}
 Summary: Library for getting and setting POSIX.1e capabilities
 # Original tarball should be here, but got deleted:
 #Source: http://www.kernel.org/pub/linux/libs/security/linux-privs/kernel-2.6/libcap-2.22.tar.bz2
@@ -81,6 +81,12 @@ chmod +x %{buildroot}/%{_libdir}/*.so.*
 rm -rf %{buildroot}
 
 %changelog
+* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 2.22-8
+- Mass rebuild 2014-01-24
+
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 2.22-7
+- Mass rebuild 2013-12-27
+
 * Tue May 14 2013 Karsten Hopp <karsten@redhat.com> 2.22-6
 - mv libraries to /usr/lib*
 - add getpcaps man page 
