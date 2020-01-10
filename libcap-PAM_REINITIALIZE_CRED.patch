@@ -1,0 +1,12 @@
+diff -urN libcap-2.25/pam_cap/pam_cap.c libcap-2.25_patched/pam_cap/pam_cap.c
+--- libcap-2.25/pam_cap/pam_cap.c	2013-12-16 05:46:28.000000000 +0100
++++ libcap-2.25_patched/pam_cap/pam_cap.c	2019-03-04 16:18:23.440525062 +0100
+@@ -286,7 +286,7 @@
+     int retval;
+     struct pam_cap_s pcs;
+ 
+-    if (!(flags & PAM_ESTABLISH_CRED)) {
++    if (!(flags & (PAM_ESTABLISH_CRED | PAM_REINITIALIZE_CRED))) {
+ 	D(("we don't handle much in the way of credentials"));
+ 	return PAM_IGNORE;
+     }
